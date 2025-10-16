@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category and Item Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+        }
+        
+        .step.active {
+            border-color: #007bff;
+            background-color: #e7f3ff;
+        }
+        
+        .step.completed {
+            border-color: #28a745;
+            background-color: #e8f5e8;
+        }
+        
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .step.active .step-title {
+            color: #007bff;
+        }
+        
+        .step.completed .step-title {
+            color: #28a745;
+        }
+        
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        
+        .selection-item {
+            padding: 15px;
+            background-color: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .selection-item:hover {
+            border-color: #007bff;
+            background-color: #f8f9ff;
+        }
+        
+        .selection-item.selected {
+            border-color: #007bff;
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .selection-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .selection-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #856404;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .result.has-selection {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .reset-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+        
+        .reset-btn:hover {
+            background-color: #5a6268;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Category and Item Selection</h1>
+        
+        <!-- Step 1: Category Selection -->
+        <div class="step active" id="categoryStep">
+            <div class="step-title">Step 1: Select Category</div>
+            <div class="selection-grid">
+                <div class="selection-item" data-category="01" onclick="selectCategory('01')">
+                    <div class="selection-number">01</div>
+                    <div class="selection-label">General Material Tests (17 items)</div>
+                </div>
+                <div class="selection-item" data-category="02" onclick="selectCategory('02')">
+                    <div class="selection-number">02</div>
+                    <div class="selection-label">Cement and PFAC Tests (15 items)</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 2: Item Selection -->
+        <div class="step hidden" id="itemStep">
+            <div class="step-title">Step 2: Select Item</div>
+            <div class="selection-grid" id="itemGrid">
+                <!-- Items will be dynamically generated here -->
+            </div>
+        </div>
+        
+        <!-- Result Display -->
+        <div class="result" id="result">
+            Please select a category first
+        </div>
+        
+        <div style="text-align: center;">
+            <button class="reset-btn" onclick="resetSelection()">Reset Selection</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedCategory = null;
+        let selectedItem = null;
+        
+        // Define item counts for each category
+        const categoryItemCounts = {
+            '01': 17,
+            '02': 15
+        };
+        
+        // Define item names for each category based on your list
+        const categoryItemNames = {
+            '01': [
+                'Sieve Analysis',
+                'Clay, Silt and Dust Content',
+                'Relative Density',
+                'Flakiness Index',
+                'Shell Content',
+                '10% Fines Value Test',
+                'Water Absorption',
+                'Moisture Content',
+                'Methylene Blue Value',
+                'Sieve Analysis - Excluding Field Technician',
+                'Clay, Silt and Dust Content - Excluding Field Technician',
+                'Elongation Index',
+                'Aggregate Crushing Value',
+                'Aggregate Impact Value',
+                'Los Angles Value',
+                'Soundness',
+                'Drying Shrinkage'
+            ],
+            '02': [
+                'Complete Set of Physical Tests (Cement)',
+                'Initial Setting Time (Cement)',
+                'Soundness Test (Cement)',
+                'Strength Test (Cement)',
+                'Standard Consistence (Cement)',
+                'Fineness Test (Cement)',
+                'Final Setting Time (Cement)',
+                'Density (Cement)',
+                'Heat of Hydration (Cement)',
+                'Initial Setting Time and Compressive Strength Tests (on the suitability of',
+                'Complete Set of Physical Tests (PFAC)',
+                'Initial Setting Time (PFAC)',
+                'Soundness Test (PFAC)',
+                'Strength Test (PFAC)',
+                'Standard Consistence (PFAC)'
+            ]
+        };
+        
+        function selectCategory(category) {
+            // Remove previous selection
+            document.querySelectorAll('#categoryStep .selection-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Add selection to clicked item
+            event.target.closest('.selection-item').classList.add('selected');
+            
+            selectedCategory = category;
+            
+            // Generate items for the selected category
+            generateItems(category);
+            
+            // Update step states
+            document.getElementById('categoryStep').classList.remove('active');
+            document.getElementById('categoryStep').classList.add('completed');
+            document.getElementById('itemStep').classList.remove('hidden');
+            document.getElementById('itemStep').classList.add('active');
+            
+            // Update result
+            updateResult();
+        }
+        
+        function generateItems(category) {
+            const itemGrid = document.getElementById('itemGrid');
+            const itemCount = categoryItemCounts[category];
+            const itemNames = categoryItemNames[category];
+            
+            // Clear existing items
+            itemGrid.innerHTML = '';
+            
+            // Generate items
+            for (let i = 1; i <= itemCount; i++) {
+                const itemNumber = i.toString().padStart(2, '0');
+                const itemName = itemNames[i - 1]; // Array is 0-indexed
+                const itemElement = document.createElement('div');
+                itemElement.className = 'selection-item';
+                itemElement.setAttribute('data-item', itemNumber);
+                itemElement.onclick = () => selectItem(itemNumber);
+                
+                itemElement.innerHTML = `
+                    <div class="selection-number">${itemNumber}</div>
+                    <div class="selection-label">${itemName}</div>
+                `;
+                
+                itemGrid.appendChild(itemElement);
+            }
+        }
+        
+        function selectItem(item) {
+            // Remove previous selection
+            document.querySelectorAll('#itemStep .selection-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Add selection to clicked item
+            event.target.closest('.selection-item').classList.add('selected');
+            
+            selectedItem = item;
+            
+            // Update step states
+            document.getElementById('itemStep').classList.remove('active');
+            document.getElementById('itemStep').classList.add('completed');
+            
+            // Update result
+            updateResult();
+        }
+        
+        function updateResult() {
+            const resultElement = document.getElementById('result');
+            
+            if (selectedCategory && selectedItem) {
+                const itemIndex = parseInt(selectedItem) - 1; // Convert to 0-indexed
+                const itemName = categoryItemNames[selectedCategory][itemIndex];
+                resultElement.textContent = `The Item number is ${selectedCategory}/${selectedItem} - ${itemName}`;
+                resultElement.classList.add('has-selection');
+            } else if (selectedCategory) {
+                resultElement.textContent = `Category ${selectedCategory} selected. Please select an item.`;
+                resultElement.classList.remove('has-selection');
+            } else {
+                resultElement.textContent = 'Please select a category first';
+                resultElement.classList.remove('has-selection');
+            }
+        }
+        
+        function resetSelection() {
+            selectedCategory = null;
+            selectedItem = null;
+            
+            // Reset all selections
+            document.querySelectorAll('.selection-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Clear item grid
+            document.getElementById('itemGrid').innerHTML = '';
+            
+            // Reset step states
+            document.getElementById('categoryStep').classList.remove('completed');
+            document.getElementById('categoryStep').classList.add('active');
+            document.getElementById('itemStep').classList.remove('active', 'completed');
+            document.getElementById('itemStep').classList.add('hidden');
+            
+            // Reset result
+            updateResult();
+        }
+    </script>
+</body>
+</html>
+
