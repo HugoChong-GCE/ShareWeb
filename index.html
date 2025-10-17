@@ -25,6 +25,8 @@
             color: #333;
             text-align: center;
             margin-bottom: 30px;
+            margin-top: 1px;
+            font-size: 20px; /* updated from default (2em) */
         }
         
         .step {
@@ -168,7 +170,7 @@
             border: 2px solid #dee2e6;
             border-radius: 8px;
             box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-            max-height: 360px;
+            max-height: 450px;
             overflow: auto; /* single scrollbar on the whole menu */
         }
 
@@ -189,8 +191,8 @@
 
         .dropdown-search input {
             width: 70%;               /* make the search field smaller */
-            max-width: 520px;         /* cap width on large screens */
-            height: 36px;
+            max-width: 550px;         /* cap width on large screens */
+            height: 25px;
             border: 2px solid #e1e5ea;
             border-radius: 999px;
             padding: 0 14px;
@@ -208,6 +210,7 @@
             gap: 8px;
             padding: 10px 12px;
             font-weight: bold;
+            font-size: 10px; /* category header font size */
             background: #f9fbff;
             cursor: pointer;
             user-select: none;
@@ -233,6 +236,7 @@
             gap: 10px;
             padding: 8px 12px;
             cursor: pointer;
+            font-size: 10px; /* dropdown list font size */
         }
 
         .dropdown-item:hover {
@@ -250,6 +254,7 @@
             color: #2f54eb;
             font-weight: 700;
             font-variant-numeric: tabular-nums;
+            font-size: 10px; /* match dropdown list font size */
         }
 
         .dropdown-footer {
@@ -257,6 +262,7 @@
             text-align: right;
             border-top: 1px solid #f0f0f0;
             background: #fafafa;
+            
         }
 
         .dropdown-footer a {
@@ -289,7 +295,7 @@
 <body>
     <div class="container">
         <h1>Category and Item Selection</h1>
-
+        
         <div class="step active">
             <div class="step-title">Select an item</div>
 
@@ -372,27 +378,27 @@
                         <div class="section-header" onclick="toggleSection('09')">
                             <span class="caret" id="caret-09">▶</span>
                             <span>Category 09</span>
-                        </div>
+                </div>
                         <div class="item-list hidden" id="list-09"></div>
-                    </div>
+                </div>
 
                     <div class="dropdown-section" id="cat10">
                         <div class="section-header" onclick="toggleSection('10')">
                             <span class="caret" id="caret-10">▶</span>
                             <span>Category 10</span>
-                        </div>
+            </div>
                         <div class="item-list hidden" id="list-10"></div>
-                    </div>
-
+        </div>
+        
                     
                 </div>
             </div>
         </div>
-
+        
         <div class="result" id="result">
             Please select an item
         </div>
-
+        
         <div style="text-align: center;">
             <button class="reset-btn" onclick="resetSelection()">Reset Selection</button>
         </div>
@@ -738,11 +744,22 @@
             lists.forEach(key => {
                 const listEl = document.getElementById('list-' + key);
                 const caretEl = document.getElementById('caret-' + key);
+                const sectionEl = document.getElementById('cat' + key);
                 if (!listEl) return;
+                // Determine if this list has any visible items
+                const hasVisible = Array.from(listEl.children).some(child => child.style.display !== 'none');
                 if (q) {
-                    listEl.classList.remove('hidden');
-                    caretEl && caretEl.classList.add('open');
+                    // Show only sections with results
+                    if (hasVisible) {
+                        sectionEl && sectionEl.classList.remove('hidden');
+                        listEl.classList.remove('hidden');
+                        caretEl && caretEl.classList.add('open');
+                    } else {
+                        sectionEl && sectionEl.classList.add('hidden');
+                    }
                 } else {
+                    // Restore default collapsed state when query cleared
+                    sectionEl && sectionEl.classList.remove('hidden');
                     listEl.classList.add('hidden');
                     caretEl && caretEl.classList.remove('open');
                 }
