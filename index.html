@@ -138,40 +138,188 @@
         .hidden {
             display: none;
         }
+
+        /* Dropdown styles */
+        .dropdown {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .dropdown-toggle {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 2px solid #dee2e6;
+            background: #fff;
+            height: 42px;
+            padding: 0 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            z-index: 10;
+            background: #fff;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            max-height: 360px;
+            overflow: hidden;
+        }
+
+        .dropdown-search {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            background: #fafafa;
+        }
+
+        .dropdown-search input {
+            width: 100%;
+            height: 36px;
+            border: 2px solid #e1e5ea;
+            border-radius: 999px;
+            padding: 0 14px;
+            outline: none;
+        }
+
+        .dropdown-section {
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            font-weight: bold;
+            background: #f9fbff;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .caret {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .caret.open {
+            transform: rotate(90deg);
+        }
+
+        .item-list {
+            max-height: 180px;
+            overflow: auto;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: #f6faff;
+        }
+
+        .dd-number {
+            min-width: 32px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            background: #eef4ff;
+            color: #2f54eb;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .dropdown-footer {
+            padding: 10px 12px;
+            text-align: right;
+            border-top: 1px solid #f0f0f0;
+            background: #fafafa;
+        }
+
+        .dropdown-footer a {
+            color: #2f54eb;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal {
+            width: min(900px, 92vw);
+            max-height: 80vh;
+            overflow: auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Category and Item Selection</h1>
-        
-        <!-- Step 1: Category Selection -->
-        <div class="step active" id="categoryStep">
-            <div class="step-title">Step 1: Select Category</div>
-            <div class="selection-grid">
-                <div class="selection-item" data-category="01" onclick="selectCategory('01')">
-                    <div class="selection-number">01</div>
-                    <div class="selection-label">General Material Tests (17 items)</div>
-                </div>
-                <div class="selection-item" data-category="02" onclick="selectCategory('02')">
-                    <div class="selection-number">02</div>
-                    <div class="selection-label">Cement and PFAC Tests (15 items)</div>
+
+        <div class="step active">
+            <div class="step-title">Select an item</div>
+
+            <div class="dropdown" id="itemDropdown">
+                <button class="dropdown-toggle" type="button" onclick="toggleMenu()">
+                    <span id="dropdownLabel">Select an item</span>
+                    <span>▾</span>
+                </button>
+
+                <div class="dropdown-menu hidden" id="dropdownMenu" role="listbox" aria-expanded="false">
+                    <div class="dropdown-search">
+                        <input id="searchInput" type="text" placeholder="search" oninput="filterItems(this.value)">
+                    </div>
+
+                    <div class="dropdown-section" id="cat01">
+                        <div class="section-header" onclick="toggleSection('01')">
+                            <span class="caret open" id="caret-01">▶</span>
+                            <span>Category 01</span>
+                        </div>
+                        <div class="item-list" id="list-01"></div>
+                    </div>
+
+                    <div class="dropdown-section" id="cat02">
+                        <div class="section-header" onclick="toggleSection('02')">
+                            <span class="caret open" id="caret-02">▶</span>
+                            <span>Category 02</span>
+                        </div>
+                        <div class="item-list" id="list-02"></div>
+                    </div>
+
+                    <div class="dropdown-footer">
+                        <a onclick="openModal()">View in full modal</a>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Step 2: Item Selection -->
-        <div class="step hidden" id="itemStep">
-            <div class="step-title">Step 2: Select Item</div>
-            <div class="selection-grid" id="itemGrid">
-                <!-- Items will be dynamically generated here -->
-            </div>
-        </div>
-        
-        <!-- Result Display -->
+
         <div class="result" id="result">
-            Please select a category first
+            Please select an item
         </div>
-        
+
         <div style="text-align: center;">
             <button class="reset-btn" onclick="resetSelection()">Reset Selection</button>
         </div>
@@ -227,72 +375,65 @@
             ]
         };
         
-        function selectCategory(category) {
-            // Remove previous selection
-            document.querySelectorAll('#categoryStep .selection-item').forEach(item => {
-                item.classList.remove('selected');
+        function renderDropdown() {
+            // Populate category lists
+            ['01','02'].forEach(cat => {
+                const container = document.getElementById('list-' + cat);
+                const names = categoryItemNames[cat];
+                const count = categoryItemCounts[cat];
+                container.innerHTML = '';
+                for (let i = 1; i <= count; i++) {
+                    const num = i.toString().padStart(2,'0');
+                    const name = names[i-1];
+                    const div = document.createElement('div');
+                    div.className = 'dropdown-item';
+                    div.setAttribute('data-cat', cat);
+                    div.setAttribute('data-num', num);
+                    div.setAttribute('data-name', name.toLowerCase());
+                    div.onclick = () => selectItemFromDropdown(cat, num);
+                    div.innerHTML = `<span class="dd-number">${cat}/${num}</span><span>${name}</span>`;
+                    container.appendChild(div);
+                }
             });
-            
-            // Add selection to clicked item
-            event.target.closest('.selection-item').classList.add('selected');
-            
-            selectedCategory = category;
-            
-            // Generate items for the selected category
-            generateItems(category);
-            
-            // Update step states
-            document.getElementById('categoryStep').classList.remove('active');
-            document.getElementById('categoryStep').classList.add('completed');
-            document.getElementById('itemStep').classList.remove('hidden');
-            document.getElementById('itemStep').classList.add('active');
-            
-            // Update result
-            updateResult();
         }
-        
-        function generateItems(category) {
-            const itemGrid = document.getElementById('itemGrid');
-            const itemCount = categoryItemCounts[category];
-            const itemNames = categoryItemNames[category];
-            
-            // Clear existing items
-            itemGrid.innerHTML = '';
-            
-            // Generate items
-            for (let i = 1; i <= itemCount; i++) {
-                const itemNumber = i.toString().padStart(2, '0');
-                const itemName = itemNames[i - 1]; // Array is 0-indexed
-                const itemElement = document.createElement('div');
-                itemElement.className = 'selection-item';
-                itemElement.setAttribute('data-item', itemNumber);
-                itemElement.onclick = () => selectItem(itemNumber);
-                
-                itemElement.innerHTML = `
-                    <div class="selection-number">${itemNumber}</div>
-                    <div class="selection-label">${itemName}</div>
-                `;
-                
-                itemGrid.appendChild(itemElement);
+
+        function toggleMenu() {
+            const menu = document.getElementById('dropdownMenu');
+            menu.classList.toggle('hidden');
+            const expanded = !menu.classList.contains('hidden');
+            menu.setAttribute('aria-expanded', String(expanded));
+        }
+
+        function toggleSection(key) {
+            const list = document.getElementById('list-' + key);
+            const caret = document.getElementById('caret-' + key);
+            if (!list) return;
+            if (list.classList.contains('hidden')) {
+                list.classList.remove('hidden');
+                caret && caret.classList.add('open');
+            } else {
+                list.classList.add('hidden');
+                caret && caret.classList.remove('open');
             }
         }
-        
-        function selectItem(item) {
-            // Remove previous selection
-            document.querySelectorAll('#itemStep .selection-item').forEach(item => {
-                item.classList.remove('selected');
+
+        function filterItems(query) {
+            const q = query.trim().toLowerCase();
+            const items = document.querySelectorAll('.dropdown-item');
+            items.forEach(el => {
+                const name = el.getAttribute('data-name') || '';
+                const code = `${el.getAttribute('data-cat')}/${el.getAttribute('data-num')}`.toLowerCase();
+                const match = !q || name.includes(q) || code.includes(q);
+                el.style.display = match ? '' : 'none';
             });
-            
-            // Add selection to clicked item
-            event.target.closest('.selection-item').classList.add('selected');
-            
-            selectedItem = item;
-            
-            // Update step states
-            document.getElementById('itemStep').classList.remove('active');
-            document.getElementById('itemStep').classList.add('completed');
-            
-            // Update result
+        }
+
+        function selectItemFromDropdown(category, itemNumber) {
+            selectedCategory = category;
+            selectedItem = itemNumber;
+            const name = categoryItemNames[category][parseInt(itemNumber,10)-1];
+            document.getElementById('dropdownLabel').textContent = `${category}/${itemNumber} - ${name}`;
+            toggleMenu();
             updateResult();
         }
         
@@ -304,11 +445,8 @@
                 const itemName = categoryItemNames[selectedCategory][itemIndex];
                 resultElement.textContent = `The Item number is ${selectedCategory}/${selectedItem} - ${itemName}`;
                 resultElement.classList.add('has-selection');
-            } else if (selectedCategory) {
-                resultElement.textContent = `Category ${selectedCategory} selected. Please select an item.`;
-                resultElement.classList.remove('has-selection');
             } else {
-                resultElement.textContent = 'Please select a category first';
+                resultElement.textContent = 'Please select an item';
                 resultElement.classList.remove('has-selection');
             }
         }
@@ -317,23 +455,26 @@
             selectedCategory = null;
             selectedItem = null;
             
-            // Reset all selections
-            document.querySelectorAll('.selection-item').forEach(item => {
-                item.classList.remove('selected');
-            });
-            
-            // Clear item grid
-            document.getElementById('itemGrid').innerHTML = '';
-            
-            // Reset step states
-            document.getElementById('categoryStep').classList.remove('completed');
-            document.getElementById('categoryStep').classList.add('active');
-            document.getElementById('itemStep').classList.remove('active', 'completed');
-            document.getElementById('itemStep').classList.add('hidden');
-            
-            // Reset result
+            document.getElementById('dropdownLabel').textContent = 'Select an item';
+            document.getElementById('searchInput').value = '';
+            filterItems('');
             updateResult();
         }
+
+        // Simple modal preview
+        function openModal() {
+            const backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop';
+            backdrop.onclick = (e) => { if (e.target === backdrop) document.body.removeChild(backdrop); };
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = '<h3>Full modal view</h3><p>This is a preview container. You can extend it as needed.</p>';
+            backdrop.appendChild(modal);
+            document.body.appendChild(backdrop);
+        }
+
+        // Init
+        renderDropdown();
     </script>
 </body>
 </html>
