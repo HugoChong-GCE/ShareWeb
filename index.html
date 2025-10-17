@@ -169,22 +169,33 @@
             border-radius: 8px;
             box-shadow: 0 6px 18px rgba(0,0,0,0.12);
             max-height: 360px;
-            overflow: hidden;
+            overflow: auto; /* single scrollbar on the whole menu */
+        }
+
+        /* Larger caret for dropdown toggle */
+        .dropdown-toggle .caret-icon {
+            font-size: 22px;
+            line-height: 1;
+            margin-left: 8px;
         }
 
         .dropdown-search {
             padding: 8px;
             border-bottom: 1px solid #eee;
             background: #fafafa;
+            display: flex;             /* center the input */
+            justify-content: center;
         }
 
         .dropdown-search input {
-            width: 100%;
+            width: 70%;               /* make the search field smaller */
+            max-width: 520px;         /* cap width on large screens */
             height: 36px;
             border: 2px solid #e1e5ea;
             border-radius: 999px;
             padding: 0 14px;
             outline: none;
+            box-sizing: border-box;
         }
 
         .dropdown-section {
@@ -212,8 +223,8 @@
         }
 
         .item-list {
-            max-height: 180px;
-            overflow: auto;
+            max-height: none; /* disable inner scrollbars */
+            overflow: visible;
         }
 
         .dropdown-item {
@@ -285,7 +296,7 @@
             <div class="dropdown" id="itemDropdown">
                 <button class="dropdown-toggle" type="button" onclick="toggleMenu()">
                     <span id="dropdownLabel">Select an item</span>
-                    <span>▾</span>
+                    <span class="caret-icon">▾</span>
                 </button>
 
                 <div class="dropdown-menu hidden" id="dropdownMenu" role="listbox" aria-expanded="false">
@@ -295,23 +306,85 @@
 
                     <div class="dropdown-section" id="cat01">
                         <div class="section-header" onclick="toggleSection('01')">
-                            <span class="caret open" id="caret-01">▶</span>
+                            <span class="caret" id="caret-01">▶</span>
                             <span>Category 01</span>
                         </div>
-                        <div class="item-list" id="list-01"></div>
+                        <div class="item-list hidden" id="list-01"></div>
                     </div>
 
                     <div class="dropdown-section" id="cat02">
                         <div class="section-header" onclick="toggleSection('02')">
-                            <span class="caret open" id="caret-02">▶</span>
+                            <span class="caret" id="caret-02">▶</span>
                             <span>Category 02</span>
                         </div>
-                        <div class="item-list" id="list-02"></div>
+                        <div class="item-list hidden" id="list-02"></div>
                     </div>
 
-                    <div class="dropdown-footer">
-                        <a onclick="openModal()">View in full modal</a>
+                    <div class="dropdown-section" id="cat03">
+                        <div class="section-header" onclick="toggleSection('03')">
+                            <span class="caret" id="caret-03">▶</span>
+                            <span>Category 03</span>
+                        </div>
+                        <div class="item-list hidden" id="list-03"></div>
                     </div>
+
+                    <div class="dropdown-section" id="cat04">
+                        <div class="section-header" onclick="toggleSection('04')">
+                            <span class="caret" id="caret-04">▶</span>
+                            <span>Category 04</span>
+                        </div>
+                        <div class="item-list hidden" id="list-04"></div>
+                    </div>
+
+                    <div class="dropdown-section" id="cat05">
+                        <div class="section-header" onclick="toggleSection('05')">
+                            <span class="caret" id="caret-05">▶</span>
+                            <span>Category 05</span>
+                        </div>
+                        <div class="item-list hidden" id="list-05"></div>
+                    </div>
+
+                    <div class="dropdown-section" id="cat06">
+                        <div class="section-header" onclick="toggleSection('06')">
+                            <span class="caret" id="caret-06">▶</span>
+                            <span>Category 06</span>
+                        </div>
+                        <div class="item-list hidden" id="list-06"></div>
+                    </div>
+
+                    <div class="dropdown-section" id="cat07">
+                        <div class="section-header" onclick="toggleSection('07')">
+                            <span class="caret" id="caret-07">▶</span>
+                            <span>Category 07</span>
+                        </div>
+                        <div class="item-list hidden" id="list-07"></div>
+                    </div>
+
+                    <div class="dropdown-section" id="cat08">
+                        <div class="section-header" onclick="toggleSection('08')">
+                            <span class="caret" id="caret-08">▶</span>
+                            <span>Category 08</span>
+                        </div>
+                        <div class="item-list hidden" id="list-08"></div>
+                    </div>
+
+                    <div class="dropdown-section" id="cat09">
+                        <div class="section-header" onclick="toggleSection('09')">
+                            <span class="caret" id="caret-09">▶</span>
+                            <span>Category 09</span>
+                        </div>
+                        <div class="item-list hidden" id="list-09"></div>
+                    </div>
+
+                    <div class="dropdown-section" id="cat10">
+                        <div class="section-header" onclick="toggleSection('10')">
+                            <span class="caret" id="caret-10">▶</span>
+                            <span>Category 10</span>
+                        </div>
+                        <div class="item-list hidden" id="list-10"></div>
+                    </div>
+
+                    
                 </div>
             </div>
         </div>
@@ -332,7 +405,15 @@
         // Define item counts for each category
         const categoryItemCounts = {
             '01': 17,
-            '02': 15
+            '02': 29,
+            '03': 32,
+            '04': 26,
+            '05': 11,
+            '06': 12,
+            '07': 52,
+            '08': 36,
+            '09': 9,
+            '10': 6
         };
         
         // Define item names for each category based on your list
@@ -366,18 +447,241 @@
                 'Final Setting Time (Cement)',
                 'Density (Cement)',
                 'Heat of Hydration (Cement)',
-                'Initial Setting Time and Compressive Strength Tests (on the suitability of',
+                'Initial Setting Time and Compressive Strength Tests (on the suitability of water for making concrete)',
                 'Complete Set of Physical Tests (PFAC)',
                 'Initial Setting Time (PFAC)',
                 'Soundness Test (PFAC)',
                 'Strength Test (PFAC)',
-                'Standard Consistence (PFAC)'
+                'Standard Consistence (PFAC)',
+                'Fineness Test (PFAC)',
+                'Final Setting Time (PFAC)',
+                'Density (PFAC)',
+                'Complete Set of Physical Test (PFA)',
+                'Fineness Test (PFA)',
+                'Moisture Content (PFA)',
+                'Water Requirement (PFA)',
+                'Particle Density (PFA)',
+                'Initial Setting Time (PFA)',
+                'Soundness (PFA)',
+                'Strength Factor at 28 days (PFA)',
+                'Fineness Tests (GGBS)',
+                'Initial Setting Time (GGBS)',
+                'Activity Index (GGBS)'
+            ],
+            '03': [
+                'Slump Test',
+                '100 mm Cube Compressive Strength',
+                '150 mm Cube Compressive Strength',
+                '75 mm Core Compressive Strength',
+                '100 mm Core Compressive Strength',
+                '150 mm Core Compressive Strength',
+                'Modulus of Elasticity of cores',
+                'Water/cement ratio, aggregate/cement ratio and percentage of fine aggregate for fresh concrete',
+                'Density of Fresh Concrete',
+                'Water Absorption',
+                'Flexural Strength',
+                'Setting Time Monitoring',
+                'Early Shrinkage Test',
+                'Sampling and Making of Concrete Cube',
+                'Curing of Concrete Cube in Laboratory',
+                'Slump Test - Excluding Field Technician',
+                '100 mm Cube Compressive Strength - Excluding Field Technician',
+                '150 mm Cube Compressive Strength - Excluding Field Technician',
+                'Sampling and Making of Concrete Cube - Excluding Field Technician',
+                'Radio Frequency Identification (RFID) Tags for Cube Compressive Strength Test (Tags provided by the Employer)',
+                'RFID Tags for Cube Compressive Strength Test (Tags provided by the Contractor)',
+                'RFID Bluetooth Readers for Cube Compressive Strength Test (Readers provided by the Employer)',
+                'RFID Bluetooth Readers for Cube Compressive Strength Test (Readers provided by the Contractor)',
+                'Extra over items 3/2, 3/3, 3/14, 3/17, 3/18, 3/19 and 6/1 for fully implementation of the RFID/Software System for Cube Compressive Strength Test',
+                'Temperature of Fresh Concrete',
+                'Temperature of Fresh Concrete - Excluding Field Technician',
+                'Flow Table Test',
+                'Flow Table Test - Excluding Field Technician',
+                'Slump Flow Test',
+                'Slump Flow Test - Excluding Field Technician',
+                'Stiffening Time',
+                'Depth of Penetration of Water under Pressure'
+            ],
+            '04': [
+                'Chemical Composition of Cement',
+                'Chemical Composition of Portland Fly Ash Cement (PFAC)',
+                'Chemical Composition of Pulverized-Fuel Ash (PFA)',
+                'Chemical  Composition of Water',
+                'Water Soluble Chloride Salts / Chloride Ion Content of Aggregate',
+                'Aggregate Sulphate Content',
+                'Acid Soluble Material and Fine Aggregate',
+                'Acid-soluble Chloride Content',
+                'Acid-soluble Sulphate Content',
+                'Total Sulphur Content',
+                'Presence of Humus',
+                'Analysis of Aggregate for CaO and Silica',
+                'Chloride Content of Concrete on Powder Drillings (Method l)',
+                'Chloride Content of Concrete on Cores (Method 2)',
+                'Chloride Concentration of Concrete on Depth Profile (Method 3)(measured in set of 3)',
+                'Aggregate/Cement ratio of Hardened Concrete',
+                'Original Water Content of Hardened Concrete',
+                'Sulphate Content of Hardened Concrete',
+                'pH Value of Concrete',
+                'Oven Dried Bulk Density of Hardened Concrete',
+                'Complete Set of Tests for Control of Alkali-Aggregate Reactions',
+                "Concrete's Ability to Resist Chloride Ion Penetration",
+                'Alkali Silica Reaction Potential by Ultra-accelerated Mortar Bar Test',
+                'Alkali Silica Reaction Potential by Concrete Prism Test',
+                'Chemical Composition of Ground Granulated Blastfurnace Slag (GGBS)',
+                'Alkali Content (GGBS)'
+            ],
+            '05': [
+                'Complete Set of Test for Recycled Coarse Aggregates',
+                'Determination of Foreign Material Content',
+                'Dry Particle Density',
+                'Water Absorption Test',
+                'Sieve Analysis for Fines',
+                'Sieve Analysis for Sand',
+                'Sieve Analysis for Grading of 10mm and 20mm Aggregates',
+                'Flakiness Index',
+                '10% Fine Value Test',
+                'Sulphate Content',
+                'Chloride Content'
+            ],
+            '06': [
+                'Compressive Strength Test',
+                'Early Age Expansion Test',
+                'Flow Consistency',
+                'Flow Consistency - Excluding Field Technician',
+                'Setting Time Test',
+                'Expansion Test',
+                'Chloride Content Test',
+                'Bleeding and Free Expansion Test to ASTM C940 - 98a (for each specimen)',
+                'Bleeding and Free Expansion Test to HKHA-SL PIL1.T320 (for set of 3 specimen)',
+                'Air Permeability',
+                'Flow Cone Test With Bottom Opening of 19mm to ASTM C939 With Modification',
+                'Flow Cone Test With Bottom Opening of 19mm to ASTM C939 With Modification - Excluding Field Technician'
+            ],
+            '07': [
+                'Reinforcement - Tensile Strength, 6-16 mm dia. bar ',
+                'Reinforcement - Tensile Strength, 20-32 mm dia. bar ',
+                'Reinforcement - Tensile Strength, 40 mm dia. bar ',
+                'Reinforcement - Tensile Strength, 50 mm dia. bar ',
+                'Reinforcement - Bend Test, 6-16 mm dia. bar ',
+                'Reinforcement - Bend Test, 20-32 mm dia. bar ',
+                'Reinforcement - Bend Test, 40 mm dia. bar ',
+                'Reinforcement - Bend Test, 50 mm dia. bar ',
+                'Reinforcement - Rebend Test, 6-16 mm dia. bar ',
+                'Reinforcement - Rebend Test, 20-32 mm dia. bar ',
+                'Reinforcement - Rebend Test, 40 mm dia. bar ',
+                'Reinforcement - Rebend Test, 50 mm dia. bar ',
+                'Testing of Mesh Reinforcement',
+                'Mass Test for Reinforcement, all diameter',
+                'Testing of Epoxy Coating',
+                'Qualified Welding Inspector to Carry out Visual Inspection on welds within normal working hours',
+                'Qualified Welding Inspector to Carry out Visual Inspection on welds outside normal working hours',
+                'Qualified Welding Inspector to Carry out Visual Inspection on welds for half day within normal working hours',
+                'Welding - Radiographic Testing',
+                'Welding - Ultrasonic Testing',
+                'Welding - Magnetic Particle Testing',
+                'Welding - Dye Penetrant Testing',
+                'Structural Steel Works - Mechanical',
+                'Structural Steel Works - Mechanical prepare samples only for carrying out tensile test (machined sample) and impact test',
+                'Structural Steel Works - Mechanical Excluding Impact Test',
+                'Structural Steel Works - Mechanical prepare samples only for carrying out tensile test (machined sample)',
+                'Tensile Test of Butt Weld',
+                'Testing of Bolt and Nut',
+                'Testing of Stainless Steel Bolt and Nut',
+                'Test of Reinforcement Connectors 10-16mm dia. bar',
+                'Test of Reinforcement Connectors 20-40mm dia. bar',
+                'Test of Reinforcement Connectors 50mm dia. bar',
+                'Reinforcement - Chemical Composition',
+                'Reinforcement - Surface Geometry',
+                'Reinforcement - Beam Test, bar dia. < 16 mm',
+                'Reinforcement - Beam Test, bar dia. >= 16 mm',
+                'Bend Test for Shear Studs',
+                'Test on Mechanical Connector Systems for Steel Reinforcing Bars (a) 10-16 mm dia. (i) Bar Static Tension Test',
+                'Test on Mechanical Connector Systems for Steel Reinforcing Bars (a) 10-16 mm dia. (ii) Bar Static Compression Test',
+                'Test on Mechanical Connector Systems for Steel Reinforcing Bars (a) 10-16 mm dia. (iii) Bar Cyclic Tension and Compression Test',
+                'Test on Mechanical Connector Systems for Steel Reinforcing Bars (b) 20-40 mm dia. (i) Bar Static Tension Test',
+                'Test on Mechanical Connector Systems for Steel Reinforcing Bars (b) 20-40 mm dia. (ii) Bar Static Compression Test',
+                'Test on Mechanical Connector Systems for Steel Reinforcing Bars (b) 20-40 mm dia. (iii) Bar Cyclic Tension and Compression Test',
+                'Test on Mechanical Connector Systems for Steel Reinforcing Bars (c) 50 mm dia. (i) Bar Static Tension Test',
+                'Test on Mechanical Connector Systems for Steel Reinforcing Bars (c) 50 mm dia. (ii) Bar Static Compression Test',
+                'Test on Mechanical Connector Systems for Steel Reinforcing Bars (c) 50 mm dia. (iii) Bar Cyclic Tension and Compression Test',
+                'Proof Load Test on Grouted Dowel Bars/Anchored bolts to BS5080',
+                'Radio Frequency Identification (RFID) Tags for Steel Reinforcement Test (Tags provided by the Employer)',
+                'RFID Tags for Steel Reinforcement Test (Tags provided by the Contractor)',
+                'RFID Bluetooth Readers for Steel Reinforcement Test (Readers provided by the Employer)',
+                'RFID Bluetooth Readers for Steel Reinforcement Test (Readers provided by the Contractor)',
+                'Extra over items 7/1 to 7/14 and 7/30 to 7/36 for fully implementation of the RFID/Software System for Steel Reinforcement Test'
+            ],
+            '08': [
+                'Drilling NX size holes and extracting 50mm diameter core samples through concrete piles, pilecaps, beams, columns, slabs, walls etc.',
+                'Drilling holes and extracting 75mm diameter core samples through concrete piles, pilecaps, beams, columns, slabs, walls etc.',
+                'Drilling holes and extracting 100mm diameter core samples through concrete piles, pilecaps, beams, columns, slabs, walls etc.',
+                'Drilling holes and extracting 150mm diameter core samples through concrete piles, pilecaps, beams, columns, slabs, walls, etc.',
+                'Dry cutting of mini-cores not exceeding 75mm diameter irrespective of length',
+                'Cutting of Stitch Cores',
+                'Extra over any of the foregoing items for reinstatement of core holes not exceeding 150 mm diameter using suitable prebagged polymer modified mortar system approved by the Contract Manager and finished with materials compatible to surroundings (This item will only be paid for when specifically instructed in writing by the Contract Manager)',
+                'Extra over any of the foregoing items for drilling through cross section of any size of steel reinforcing bar up to and including 16mm diameter (measured in number of cut)',
+                'Extra over any of the foregoing items for drilling through cross section of steel reinforcing bar of size exceeding 16 mm diameter (measured in number of cut)',
+                'Extra over any of the foregoing items for drilling through the axis of steel reinforcing bars irrespective of sizes',
+                'Concrete drilling irrespective of depth',
+                'Covermeter survey before core drilling for 8/1 to 8/4',
+                'Depth Measurement of Concrete Slab by Drilling',
+                'Provision of each set of confirmatory core drilling equipment on site',
+                'Setting up of confirmatory core drilling equipment over each core location',
+                'Drill and extract NX size core samples through driven cast insitu concrete piles, pilecaps, etc, into rock',
+                'Drill and extract 100mm diameter core samples through large diameter bored piles, pilecaps, etc. into rock ',
+                'Drill and extract HX size core samples through large diameter bored piles, pilecaps, etc. into rock ',
+                'Confirmatory core drilling for NX size core samples through sonic tube into rock',
+                'Confirmatory core drilling for 100 mm diameter core samples through sonic tube into rock',
+                'Confirmatory core drilling for HX size core samples through sonic tube into rock',
+                'Confirmatory core drilling for NMLC size core samples through sonic tube into rock',
+                'Confirmatory core drilling for HMLC size core samples through sonic tube into rock',
+                'Confirmatory core drilling for 3C-MLC size core samples through sonic tube into rock',
+                'Drill NX size by wash-boring',
+                'Drill HX size by wash-boring',
+                'Drill and extract NX size core samples through rock',
+                'Drill and extract HX size core samples through rock',
+                'Drill and extract NMLC size core samples through rock',
+                'Drill and extract HMLC size core samples through rock',
+                'Drill and extract 3C-MLC size core samples through rock',
+                'Drill and extract T6-131 size core samples through rock',
+                'Uniaxial rock compression test',
+                'Point load test on rock',
+                'Standing Time of Drilling Rig and Crew for Confirmatory Core Drilling',
+                'Verticality measurement of drilled hole for Confirmatory Core Drilling'
+            ],
+            '09': [
+                'Mini Bus',
+                'Mobile Phone',
+                'Camera',
+                'Production of electronic parallel/policing test reports from hard or soft data supplied by Housing Department Material Testing Laboratory for website reporting',
+                'Safety shoes',
+                '3R colour print photograph',
+                '5R colour print photograph',
+                '8R colour print photograph',
+                'Allow a provisional sum of $100,000.00 in extending RFID application to testing of concrete cores'
+            ],
+            '10': [
+                'Technical Assistant',
+                'Unskilled Labourer',
+                'Field Technician carrying out duties within normal working hours',
+                'Field Technician carrying out duties for half day within normal working hours',
+                'Field Technician carrying out duties outside normal working hours',
+                'Technical Officer (Laboratory)'
             ]
         };
         
+
+
+
+
+
+
+
+
+        
         function renderDropdown() {
             // Populate category lists
-            ['01','02'].forEach(cat => {
+            Object.keys(categoryItemNames).forEach(cat => {
                 const container = document.getElementById('list-' + cat);
                 const names = categoryItemNames[cat];
                 const count = categoryItemCounts[cat];
@@ -391,7 +695,8 @@
                     div.setAttribute('data-num', num);
                     div.setAttribute('data-name', name.toLowerCase());
                     div.onclick = () => selectItemFromDropdown(cat, num);
-                    div.innerHTML = `<span class="dd-number">${cat}/${num}</span><span>${name}</span>`;
+                    // Show only the number in the list; name will show after selection
+                    div.innerHTML = `<span class="dd-number">${cat}/${num}</span>`;
                     container.appendChild(div);
                 }
             });
@@ -423,8 +728,24 @@
             items.forEach(el => {
                 const name = el.getAttribute('data-name') || '';
                 const code = `${el.getAttribute('data-cat')}/${el.getAttribute('data-num')}`.toLowerCase();
-                const match = !q || name.includes(q) || code.includes(q);
+                // Filter by code or name even if name is hidden in the list
+                const match = !q || code.includes(q) || name.includes(q);
                 el.style.display = match ? '' : 'none';
+            });
+
+            // Auto-expand categories when searching; collapse when cleared
+            const lists = Object.keys(categoryItemNames);
+            lists.forEach(key => {
+                const listEl = document.getElementById('list-' + key);
+                const caretEl = document.getElementById('caret-' + key);
+                if (!listEl) return;
+                if (q) {
+                    listEl.classList.remove('hidden');
+                    caretEl && caretEl.classList.add('open');
+                } else {
+                    listEl.classList.add('hidden');
+                    caretEl && caretEl.classList.remove('open');
+                }
             });
         }
 
@@ -432,7 +753,8 @@
             selectedCategory = category;
             selectedItem = itemNumber;
             const name = categoryItemNames[category][parseInt(itemNumber,10)-1];
-            document.getElementById('dropdownLabel').textContent = `${category}/${itemNumber} - ${name}`;
+            // Show only the number on the dropdown label
+            document.getElementById('dropdownLabel').textContent = `${category}/${itemNumber}`;
             toggleMenu();
             updateResult();
         }
@@ -443,6 +765,7 @@
             if (selectedCategory && selectedItem) {
                 const itemIndex = parseInt(selectedItem) - 1; // Convert to 0-indexed
                 const itemName = categoryItemNames[selectedCategory][itemIndex];
+                // Show code and name in the result line
                 resultElement.textContent = `The Item number is ${selectedCategory}/${selectedItem} - ${itemName}`;
                 resultElement.classList.add('has-selection');
             } else {
@@ -461,17 +784,7 @@
             updateResult();
         }
 
-        // Simple modal preview
-        function openModal() {
-            const backdrop = document.createElement('div');
-            backdrop.className = 'modal-backdrop';
-            backdrop.onclick = (e) => { if (e.target === backdrop) document.body.removeChild(backdrop); };
-            const modal = document.createElement('div');
-            modal.className = 'modal';
-            modal.innerHTML = '<h3>Full modal view</h3><p>This is a preview container. You can extend it as needed.</p>';
-            backdrop.appendChild(modal);
-            document.body.appendChild(backdrop);
-        }
+        // (modal preview removed)
 
         // Init
         renderDropdown();
