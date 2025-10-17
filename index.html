@@ -783,7 +783,7 @@
                 const itemIndex = parseInt(selectedItem) - 1; // Convert to 0-indexed
                 const itemName = categoryItemNames[selectedCategory][itemIndex];
                 // Show code and name in the result line
-                resultElement.textContent = `The Item number is ${selectedCategory}/${selectedItem} - ${itemName}`;
+                resultElement.textContent = `${selectedCategory}/${selectedItem} - ${itemName}`;
                 resultElement.classList.add('has-selection');
             } else {
                 resultElement.textContent = 'Please select an item';
